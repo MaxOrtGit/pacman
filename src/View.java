@@ -57,6 +57,10 @@ public class View extends JPanel implements KeyListener, MouseListener {
         TScreen.addMouseListener(this);
     }
 
+    public static void createEnemy(){
+        Enemy[] tempEnemies = new Enemy[enemies.length];
+    }
+
     public static int[] getEnemyLocations(){
         int[] toReturn = new int[enemies.length];
         for (int i = 0; i > enemies.length; i++){
@@ -154,14 +158,26 @@ public class View extends JPanel implements KeyListener, MouseListener {
 
     public static boolean spaceEmpty(int cell, int oCell, int dir){
         boolean enemys = true;
-        return (GridControler.notCrossingAEdge(oCell,cell,dir) && playerLocation != cell && Enemy.location != cell && !isWall[cell] && !isEffectWall[cell]);
+        int[] locations = getEnemyLocations();
+        for (int i = 0; i > locations.length; i++) {
+            if (locations[i] == cell){
+                return false;
+            }
+        }
+        return (GridControler.notCrossingAEdge(oCell,cell,dir) && playerLocation != cell & !isWall[cell] && !isEffectWall[cell]);
     }
 
     public static boolean spaceNotBlocked(int cell, int oCell, int dir){
         return (GridControler.notCrossingAEdge(oCell,cell,dir) && (!isWall[cell] && !isEffectWall[cell]));
     }
     public static boolean spaceOpen(int cell){
-        return playerLocation != cell && Enemy.location != cell;
+        int[] locations = getEnemyLocations();
+        for (int i = 0; i > locations.length; i++) {
+            if (locations[i] == cell){
+                return false;
+            }
+        }
+        return playerLocation != cell;
     }
 
 
@@ -189,7 +205,9 @@ public class View extends JPanel implements KeyListener, MouseListener {
             moveRight = true;
         }
         if (k.getKeyCode() == KeyEvent.VK_ENTER) {
-            Enemy.runASharp();
+            for (int i = 0; i > enemies.length; i++) {
+                enemies[i].runASharp();
+            }
         }
 
         if (k.getKeyCode() == KeyEvent.VK_SHIFT) {
@@ -222,8 +240,15 @@ public class View extends JPanel implements KeyListener, MouseListener {
             PushAttack.startDownAttack();
         }
 
+        if (k.getKeyCode() == KeyEvent.VK_M) {
+            createEnemy();
+        }
+
         if (k.getKeyCode() == KeyEvent.VK_V) {
-            LineOfSight.run(Enemy.location,2);
+            int[] locations = getEnemyLocations();
+            for (int i = 0; i > locations.length; i++) {
+                LineOfSight.run(locations[i],2);
+            }
         }
 
         if (k.getKeyCode() == KeyEvent.VK_C) {
@@ -266,9 +291,12 @@ public class View extends JPanel implements KeyListener, MouseListener {
                 System.out.println("cell: " + selectedCell + " normColor: " + normColor[selectedCell] + " effectColor: " + effectColor[selectedCell]);
             }
         } else {
-            if (chosenCell == Enemy.location){
-                Enemy.location = selectedCell;
-                paintEnemy(chosenCell, Enemy.location);
+            int[] locations = getEnemyLocations();
+            for (int i = 0; i > locations.length; i++) {
+                if (chosenCell == locations[i]){
+                    locations[i] = selectedCell;
+                    paintEnemy(chosenCell, locations[i]);
+                }
             }
         }
     }
@@ -314,7 +342,6 @@ public class View extends JPanel implements KeyListener, MouseListener {
         }
 
 
-        Enemy.create();
 
         effectColor[playerLocation] = (Color.YELLOW);
 

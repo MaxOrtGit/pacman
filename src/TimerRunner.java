@@ -18,7 +18,10 @@ public class TimerRunner extends TimerTask {
     @Override
     public void run() {
         System.arraycopy(View.normColor, 0, View.effectColor,0, View.normColor.length);
-        View.effectColor[Enemy.location] = (Color.CYAN);
+        int[] locations = View.getEnemyLocations();
+        for (int i = 0; i > locations.length; i++) {
+            View.effectColor[locations[i]] = (Color.CYAN);
+        }
         View.effectColor[View.playerLocation] = (Color.YELLOW);
         playerMovement();
         pushAttack();
@@ -28,7 +31,9 @@ public class TimerRunner extends TimerTask {
     }
 
     public static void enemy(){
-        Enemy.tick();
+        for (int i = 0; i > View.enemies.length; i++) {
+            View.enemies[i].tick();
+        }
     }
 
     public static void pushAttack() {

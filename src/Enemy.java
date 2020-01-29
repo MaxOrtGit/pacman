@@ -22,7 +22,7 @@ public class Enemy<addToPath> {
 
         while (done == false) {
             int toBeGhost = rand.nextInt(sizeOfGrid*sizeOfGrid - 1);
-            if (View.isWall[toBeGhost] != true && toBeGhost != View.playerLocation){
+            if (View.spaceOpen(toBeGhost) && toBeGhost != View.playerLocation){
                 done = true;
                 location = toBeGhost;
                 View.effectColor[toBeGhost] = (Color.CYAN);

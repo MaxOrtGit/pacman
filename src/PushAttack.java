@@ -3,8 +3,6 @@ import java.awt.*;
 
 public class PushAttack {
 
-    public static GridControler g;
-    public static Enemy e;
 
     public static int sizeOfGrid = View.sizeOfGrid;
     public static int UATime = 0;
@@ -74,7 +72,7 @@ public class PushAttack {
         }
     }
     public static Color addColors(Color col1, Color col2, Color org) {
-        //Color grad = getGradient(org, new Color(overFlow(col1.getRed() + col2.getRed() - org.getRed()), overFlow(col1.getGreen() + col2.getGreen() - org.getGreen()), overFlow(col1.getBlue() + col2.getBlue() - org.getBlue())), .95);
+        //Color grad = getGradient(org, new Color(overFlow(col1.getRed() + col2.getRed() - orGridControler.getRed()), overFlow(col1.getGreen() + col2.getGreen() - orGridControler.getGreen()), overFlow(col1.getBlue() + col2.getBlue() - orGridControler.getBlue())), .95);
         return new Color(overFlow(col1.getRed() + col2.getRed() - org.getRed()), overFlow(col1.getGreen() + col2.getGreen() - org.getGreen()), overFlow(col1.getBlue() + col2.getBlue() - org.getBlue()));
     }
 
@@ -363,13 +361,13 @@ public class PushAttack {
             int locationA1 = -1;
             int locationA2 = -1;
             int locationA3 = -1;
-            if (g.notCrossingAEdge(locationF1, locationF1+dir, dirSide)) {
+            if (GridControler.notCrossingAEdge(locationF1, locationF1+dir, dirSide)) {
                 locationA1 = locationF1+dir;
             }
-            if (g.notCrossingAEdge(locationF2, locationF2+dir, dirSide)) {
+            if (GridControler.notCrossingAEdge(locationF2, locationF2+dir, dirSide)) {
                 locationA2 = locationF2+dir;
             }
-            if (g.notCrossingAEdge(locationF3, locationF3+dir, dirSide)) {
+            if (GridControler.notCrossingAEdge(locationF3, locationF3+dir, dirSide)) {
                 locationA3 = locationF3+dir;
             }
             if(e.location == locationF1 && locationA1 != -1 && !View.isWall[locationA1] && !View.isEffectWall[locationA1]){
@@ -415,13 +413,13 @@ public class PushAttack {
             int locationA1 = -1;
             int locationA2 = -1;
             int locationA3 = -1;
-            if (g.notCrossingAEdge(locationF1, locationF1+dir, dirSide)) {
+            if (GridControler.notCrossingAEdge(locationF1, locationF1+dir, dirSide)) {
                 locationA1 = locationF1+dir;
             }
-            if (g.notCrossingAEdge(locationF2, locationF2+dir, dirSide)) {
+            if (GridControler.notCrossingAEdge(locationF2, locationF2+dir, dirSide)) {
                 locationA2 = locationF2+dir;
             }
-            if (g.notCrossingAEdge(locationF3, locationF3+dir, dirSide)) {
+            if (GridControler.notCrossingAEdge(locationF3, locationF3+dir, dirSide)) {
                 locationA3 = locationF3+dir;
             }
             if(e.location == locationF1 && locationA1 != -1 && !View.isWall[locationA1] && !View.isEffectWall[locationA1]){
@@ -500,10 +498,10 @@ public class PushAttack {
             UAReset = false;
             UATime = 400;
             ULocation = View.playerLocation;
-            if (g.notCrossingAEdge(ULocation, ULocation-1,1)) {
-                if (g.notCrossingAEdge(ULocation-1, ULocation-sizeOfGrid-1,0)) {
+            if (GridControler.notCrossingAEdge(ULocation, ULocation-1,1)) {
+                if (GridControler.notCrossingAEdge(ULocation-1, ULocation-sizeOfGrid-1,0)) {
                     ULocationC1 = ULocation-sizeOfGrid-1;
-                    if (g.notCrossingAEdge(ULocationC1, ULocationC1-sizeOfGrid,0)) {
+                    if (GridControler.notCrossingAEdge(ULocationC1, ULocationC1-sizeOfGrid,0)) {
                         ULocationF1 = ULocationC1-sizeOfGrid;
                     } else {
                         ULocationF1 = -1;
@@ -516,9 +514,9 @@ public class PushAttack {
                 ULocationC1 = -1;
                 ULocationF1 = -1;
             }
-            if (g.notCrossingAEdge(ULocation, ULocation-sizeOfGrid,0)) {
+            if (GridControler.notCrossingAEdge(ULocation, ULocation-sizeOfGrid,0)) {
                 ULocationC2 = ULocation-sizeOfGrid;
-                if (g.notCrossingAEdge(ULocationC2, ULocationC2-sizeOfGrid,0)) {
+                if (GridControler.notCrossingAEdge(ULocationC2, ULocationC2-sizeOfGrid,0)) {
                     ULocationF2 = ULocationC2-sizeOfGrid;
                 } else {
                     ULocationF2 = -1;
@@ -527,10 +525,10 @@ public class PushAttack {
                 ULocationC2 = -1;
                 ULocationF2 = -1;
             }
-            if (g.notCrossingAEdge(ULocation, ULocation+1,2)) {
-                if (g.notCrossingAEdge(ULocation+1, ULocation-sizeOfGrid+1,0)) {
+            if (GridControler.notCrossingAEdge(ULocation, ULocation+1,2)) {
+                if (GridControler.notCrossingAEdge(ULocation+1, ULocation-sizeOfGrid+1,0)) {
                     ULocationC3 = ULocation-sizeOfGrid+1;
-                    if (g.notCrossingAEdge(ULocationC3, ULocationC3-sizeOfGrid,0)) {
+                    if (GridControler.notCrossingAEdge(ULocationC3, ULocationC3-sizeOfGrid,0)) {
                         ULocationF3 = ULocationC3-sizeOfGrid;
                     } else {
                         ULocationF3 = -1;
@@ -585,10 +583,10 @@ public class PushAttack {
             RAReset = false;
             RATime = 400;
             RLocation = View.playerLocation;
-            if (g.notCrossingAEdge(RLocation, RLocation-sizeOfGrid,0)) {
-                if (g.notCrossingAEdge(RLocation-sizeOfGrid, RLocation-sizeOfGrid+1,2)) {
+            if (GridControler.notCrossingAEdge(RLocation, RLocation-sizeOfGrid,0)) {
+                if (GridControler.notCrossingAEdge(RLocation-sizeOfGrid, RLocation-sizeOfGrid+1,2)) {
                     RLocationC1 = RLocation-sizeOfGrid+1;
-                    if (g.notCrossingAEdge(RLocationC1, RLocationC1+1,2)) {
+                    if (GridControler.notCrossingAEdge(RLocationC1, RLocationC1+1,2)) {
                         RLocationF1 = RLocationC1+1;
                     } else {
                         RLocationF1 = -1;
@@ -601,9 +599,9 @@ public class PushAttack {
                 RLocationC1 = -1;
                 RLocationF1 = -1;
             }
-            if (g.notCrossingAEdge(RLocation, RLocation+1,2)) {
+            if (GridControler.notCrossingAEdge(RLocation, RLocation+1,2)) {
                 RLocationC2 = RLocation+1;
-                if (g.notCrossingAEdge(RLocationC2, RLocationC2+1,2)) {
+                if (GridControler.notCrossingAEdge(RLocationC2, RLocationC2+1,2)) {
                     RLocationF2 = RLocationC2+1;
                 } else {
                     RLocationF2 = -1;
@@ -612,10 +610,10 @@ public class PushAttack {
                 RLocationC2 = -1;
                 RLocationF2 = -1;
             }
-            if (g.notCrossingAEdge(RLocation, RLocation+sizeOfGrid,0)) {
-                if (g.notCrossingAEdge(RLocation+sizeOfGrid, RLocation+sizeOfGrid+1,2)) {
+            if (GridControler.notCrossingAEdge(RLocation, RLocation+sizeOfGrid,0)) {
+                if (GridControler.notCrossingAEdge(RLocation+sizeOfGrid, RLocation+sizeOfGrid+1,2)) {
                     RLocationC3 = RLocation+sizeOfGrid+1;
-                    if (g.notCrossingAEdge(RLocationC3, RLocationC3+1,2)) {
+                    if (GridControler.notCrossingAEdge(RLocationC3, RLocationC3+1,2)) {
                         RLocationF3 = RLocationC3+1;
                     } else {
                         RLocationF3 = -1;
@@ -669,10 +667,10 @@ public class PushAttack {
             LAReset = false;
             LATime = 400;
             LLocation = View.playerLocation;
-            if (g.notCrossingAEdge(LLocation, LLocation-sizeOfGrid,0)) {
-                if (g.notCrossingAEdge(LLocation-sizeOfGrid, LLocation-sizeOfGrid-1,1)) {
+            if (GridControler.notCrossingAEdge(LLocation, LLocation-sizeOfGrid,0)) {
+                if (GridControler.notCrossingAEdge(LLocation-sizeOfGrid, LLocation-sizeOfGrid-1,1)) {
                     LLocationC1 = LLocation-sizeOfGrid-1;
-                    if (g.notCrossingAEdge(LLocationC1, LLocationC1-1,1)) {
+                    if (GridControler.notCrossingAEdge(LLocationC1, LLocationC1-1,1)) {
                         LLocationF1 = LLocationC1-1;
                     } else {
                         LLocationF1 = -1;
@@ -685,9 +683,9 @@ public class PushAttack {
                 LLocationC1 = -1;
                 LLocationF1 = -1;
             }
-            if (g.notCrossingAEdge(LLocation, LLocation-1,1)) {
+            if (GridControler.notCrossingAEdge(LLocation, LLocation-1,1)) {
                 LLocationC2 = LLocation-1;
-                if (g.notCrossingAEdge(LLocationC2, LLocationC2-1,1)) {
+                if (GridControler.notCrossingAEdge(LLocationC2, LLocationC2-1,1)) {
                     LLocationF2 = LLocationC2-1;
                 } else {
                     LLocationF2 = -1;
@@ -696,10 +694,10 @@ public class PushAttack {
                 LLocationC2 = -1;
                 LLocationF2 = -1;
             }
-            if (g.notCrossingAEdge(LLocation, LLocation+sizeOfGrid,0)) {
-                if (g.notCrossingAEdge(LLocation+sizeOfGrid, LLocation+sizeOfGrid-1,1)) {
+            if (GridControler.notCrossingAEdge(LLocation, LLocation+sizeOfGrid,0)) {
+                if (GridControler.notCrossingAEdge(LLocation+sizeOfGrid, LLocation+sizeOfGrid-1,1)) {
                     LLocationC3 = LLocation+sizeOfGrid-1;
-                    if (g.notCrossingAEdge(LLocationC3, LLocationC3-1,1)) {
+                    if (GridControler.notCrossingAEdge(LLocationC3, LLocationC3-1,1)) {
                         LLocationF3 = LLocationC3-1;
                     } else {
                         LLocationF3 = -1;
@@ -754,10 +752,10 @@ public class PushAttack {
             DAReset = false;
             DATime = 400;
             DLocation = View.playerLocation;
-            if (g.notCrossingAEdge(DLocation, DLocation-1,1)) {
-                if (g.notCrossingAEdge(DLocation-1, DLocation+sizeOfGrid-1,0)) {
+            if (GridControler.notCrossingAEdge(DLocation, DLocation-1,1)) {
+                if (GridControler.notCrossingAEdge(DLocation-1, DLocation+sizeOfGrid-1,0)) {
                     DLocationC1 = DLocation+sizeOfGrid-1;
-                    if (g.notCrossingAEdge(DLocationC1, DLocationC1+sizeOfGrid,0)) {
+                    if (GridControler.notCrossingAEdge(DLocationC1, DLocationC1+sizeOfGrid,0)) {
                         DLocationF1 = DLocationC1+sizeOfGrid;
                     } else {
                         DLocationF1 = -1;
@@ -771,9 +769,9 @@ public class PushAttack {
                 DLocationF1 = -1;
             }
 
-            if (g.notCrossingAEdge(DLocation, DLocation+sizeOfGrid,0)) {
+            if (GridControler.notCrossingAEdge(DLocation, DLocation+sizeOfGrid,0)) {
                 DLocationC2 = DLocation+sizeOfGrid;
-                if (g.notCrossingAEdge(DLocationC2, DLocationC2+sizeOfGrid,0)) {
+                if (GridControler.notCrossingAEdge(DLocationC2, DLocationC2+sizeOfGrid,0)) {
                     DLocationF2 = DLocationC2+sizeOfGrid;
                 } else {
                     DLocationF2 = -1;
@@ -783,10 +781,10 @@ public class PushAttack {
                 DLocationF2 = -1;
             }
 
-            if (g.notCrossingAEdge(DLocation, DLocation+1,2)) {
-                if (g.notCrossingAEdge(DLocation+1, DLocation+sizeOfGrid+1,0)) {
+            if (GridControler.notCrossingAEdge(DLocation, DLocation+1,2)) {
+                if (GridControler.notCrossingAEdge(DLocation+1, DLocation+sizeOfGrid+1,0)) {
                     DLocationC3 = DLocation+sizeOfGrid+1;
-                    if (g.notCrossingAEdge(DLocationC3, DLocationC3+sizeOfGrid,0)) {
+                    if (GridControler.notCrossingAEdge(DLocationC3, DLocationC3+sizeOfGrid,0)) {
                         DLocationF3 = DLocationC3+sizeOfGrid;
                     } else {
                         DLocationF3 = -1;
