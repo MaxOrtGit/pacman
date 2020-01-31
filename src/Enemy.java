@@ -6,8 +6,8 @@ public class Enemy<addToPath> {
     public int location;
     public static int sizeOfGrid = View.sizeOfGrid;
     public boolean ableToRun = true;
-    public boolean running = false;
-    public boolean ran = false;
+    public boolean running = true;
+    public static boolean ran = false;
     public static boolean paint = false;
     public int target = -1;
     public boolean roaming = false;
