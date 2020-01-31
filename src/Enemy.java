@@ -14,18 +14,22 @@ public class Enemy<addToPath> {
     public int untilMove = 0;
     public int moveTick = 30;
     public int lookTick = 2;
+    public Color color;
 
     public Enemy() {
         boolean done = false;
         Random rand = new Random();
-
-
         while (done == false) {
             int toBeGhost = rand.nextInt(sizeOfGrid*sizeOfGrid - 1);
-            if (View.spaceOpen(toBeGhost) && toBeGhost != View.playerLocation){
+            if (View.spaceEmpty(toBeGhost, toBeGhost, 0) && toBeGhost != View.playerLocation){
                 done = true;
                 location = toBeGhost;
-                View.effectColor[toBeGhost] = (Color.CYAN);
+                float r = rand.nextFloat();
+                float g = rand.nextFloat();
+                float b = rand.nextFloat();
+                color = new Color(r, g, b);
+                View.effectColor[toBeGhost] = color;
+
                 View.updated[toBeGhost] = true;
             }
         }
@@ -49,9 +53,6 @@ public class Enemy<addToPath> {
                 lookTick--;
             }
             if (moveTick == 0) {
-                if (paint) {
-                    View.resetAll();
-                }
                 lookAI();
                 if (running && ableToRun) {
                     if (!roaming) {
@@ -81,7 +82,7 @@ public class Enemy<addToPath> {
             int oEnemyLocation = location;
             int nEnemyLocation = newLocation[1];
             location = nEnemyLocation;
-            View.paintEnemy(oEnemyLocation, nEnemyLocation);
+            View.paintEnemy(oEnemyLocation, nEnemyLocation, color);
             if (paint && target != View.playerLocation) {
                 View.effectColor[target] = (PushAttack.getGradient(new Color(200, 0, 0), View.getNormCellColor(target), .25));
                 View.updated[target] = true;
@@ -96,7 +97,7 @@ public class Enemy<addToPath> {
             int oEnemyLocation = location;
             int nEnemyLocation = newLocation[1];
             location = nEnemyLocation;
-            View.paintEnemy(oEnemyLocation, nEnemyLocation);
+            View.paintEnemy(oEnemyLocation, nEnemyLocation, color);
         }
     }
 
@@ -111,7 +112,7 @@ public class Enemy<addToPath> {
                         if (View.spaceEmpty(location+sizeOfGrid, location, 0)){
                             int oLocation = location;
                             location = location+sizeOfGrid;
-                            View.paintEnemy(oLocation, location);
+                            View.paintEnemy(oLocation, location, color);
                             j = 50;
                         }
                         break;
@@ -119,7 +120,7 @@ public class Enemy<addToPath> {
                         if (View.spaceEmpty(location-sizeOfGrid, location, 0)){
                             int oLocation = location;
                             location = location-sizeOfGrid;
-                            View.paintEnemy(oLocation, location);
+                            View.paintEnemy(oLocation, location, color);
                             j = 50;
                         }
                         break;
@@ -127,7 +128,7 @@ public class Enemy<addToPath> {
                         if (View.spaceEmpty(location+1, location, 2)){
                             int oLocation = location;
                             location = location+1;
-                            View.paintEnemy(oLocation, location);
+                            View.paintEnemy(oLocation, location, color);
                             j = 50;
                         }
                         break;
@@ -135,7 +136,7 @@ public class Enemy<addToPath> {
                         if (View.spaceEmpty(location-1, location, 1)){
                             int oLocation = location;
                             location = location-1;
-                            View.paintEnemy(oLocation, location);
+                            View.paintEnemy(oLocation, location, color);
                             j = 50;
                         }
                         break;

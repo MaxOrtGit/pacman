@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -19,11 +20,13 @@ public class TimerRunner extends TimerTask {
     public void run() {
         System.arraycopy(View.normColor, 0, View.effectColor,0, View.normColor.length);
         int[] locations = View.getEnemyLocations();
-        for (int i = 0; i > locations.length; i++) {
-            View.effectColor[locations[i]] = (Color.CYAN);
+        for (int i = 0; i < locations.length; i++) {
+            View.effectColor[locations[i]] = View.enemies[i].color;
+            View.updated[locations[i]] = true;
         }
         View.effectColor[View.playerLocation] = (Color.YELLOW);
-        playerMovement();
+        View.updated[View.playerLocation] = true;
+        playerInput();
         pushAttack();
         enemy();
         View.resetOptimized();
@@ -31,7 +34,7 @@ public class TimerRunner extends TimerTask {
     }
 
     public static void enemy(){
-        for (int i = 0; i > View.enemies.length; i++) {
+        for (int i = 0; i < View.enemies.length; i++) {
             View.enemies[i].tick();
         }
     }
@@ -52,7 +55,7 @@ public class TimerRunner extends TimerTask {
         }
     }
 
-    public static void playerMovement(){
+    public static void playerInput(){
         if (View.moveUp && View.spaceNotBlocked(View.playerLocation - View.sizeOfGrid, View.playerLocation, 0)) {
             View.moveUp = false;
             View.movePlayer(View.playerLocation, View.playerLocation - View.sizeOfGrid, 0);
@@ -84,6 +87,39 @@ public class TimerRunner extends TimerTask {
         if (View.moveRight ) {
             View.moveRight = false;
             View.movePlayer(View.playerLocation, View.playerLocation + 1, 2);
+        }
+
+        if (View.clickedV){
+            int[] locations = View.getEnemyLocations();
+            for (int location : locations) {
+                LineOfSight.run(location, 2);
+            }
+            View.clickedV = false;
+        }
+        if (View.clickedC){
+            View.resetAll();
+            View.clickedC = false;
+        }
+        if(View.clickedM){
+            View.createEnemy();
+            View.clickedM = false;
+        }
+
+        if (View.clickedUp) {
+            PushAttack.startUpAttack();
+            View.clickedUp = false;
+        }
+        if (View.clickedRight) {
+            PushAttack.startRightAttack();
+            View.clickedRight = false;
+        }
+        if (View.clickedLeft) {
+            PushAttack.startLeftAttack();
+            View.clickedLeft = false;
+        }
+        if (View.clickedDown) {
+            PushAttack.startDownAttack();
+            View.clickedDown = false;
         }
     }
 }

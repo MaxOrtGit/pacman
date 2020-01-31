@@ -50,6 +50,11 @@ public class PushAttack {
     public static int DLocationF2 = -1;
     public static int DLocationF3 = -1;
 
+    public static Enemy[] UPushed;
+    public static Enemy[] RPushed;
+    public static Enemy[] LPushed;
+    public static Enemy[] DPushed;
+
     public static int[] hasEffect;
     public static Color[] saveColor = new Color[sizeOfGrid * sizeOfGrid];;
 
@@ -344,20 +349,22 @@ public class PushAttack {
             if (locationC3 != -1){
                 hasEffect[locationC3] *= mod;
             }
-            if(e.location == locationC1 && locationF1 != -1 && !View.isWall[locationF1] && !View.isEffectWall[locationF1]){
-                e.ableToRun = false;
-                Enemy.location = locationF1;
-                View.paintEnemy(locationC1, locationF1);
-            } else if(e.location == locationC2 && locationF2 != -1 && !View.isWall[locationF2] && !View.isEffectWall[locationF2]){
-                e.ableToRun = false;
-                e.location = locationF2;
-                View.paintEnemy(locationC2, locationF2);
-            } else if(e.location == locationC3 && locationF3 != -1 && !View.isWall[locationF3] && !View.isEffectWall[locationF3]){
-                e.ableToRun = false;
-                e.location = locationF3;
-                View.paintEnemy(locationC3, locationF3);
+            for (int i = 0; i < View.enemies.length; i++) {
+                Enemy e = View.enemies[i];
+                if (e.location == locationC1 && locationF1 != -1 && !View.isWall[locationF1] && !View.isEffectWall[locationF1]) {
+                    e.ableToRun = false;
+                    e.location = locationF1;
+                    View.paintEnemy(locationC1, locationF1, View.enemies[i].color);
+                } else if (e.location == locationC2 && locationF2 != -1 && !View.isWall[locationF2] && !View.isEffectWall[locationF2]) {
+                    e.ableToRun = false;
+                    e.location = locationF2;
+                    View.paintEnemy(locationC2, locationF2, View.enemies[i].color);
+                } else if (e.location == locationC3 && locationF3 != -1 && !View.isWall[locationF3] && !View.isEffectWall[locationF3]) {
+                    e.ableToRun = false;
+                    e.location = locationF3;
+                    View.paintEnemy(locationC3, locationF3, View.enemies[i].color);
+                }
             }
-
             int locationA1 = -1;
             int locationA2 = -1;
             int locationA3 = -1;
@@ -370,12 +377,15 @@ public class PushAttack {
             if (GridControler.notCrossingAEdge(locationF3, locationF3+dir, dirSide)) {
                 locationA3 = locationF3+dir;
             }
-            if(e.location == locationF1 && locationA1 != -1 && !View.isWall[locationA1] && !View.isEffectWall[locationA1]){
-                e.ableToRun = false;
-            } else if(e.location == locationF2 && locationA2 != -1 && !View.isWall[locationA2] && !View.isEffectWall[locationA2]){
-                e.ableToRun = false;
-            } else if(e.location == locationF3 && locationA3 != -1 && !View.isWall[locationA3] && !View.isEffectWall[locationA3]){
-                e.ableToRun = false;
+            for (int i = 0; i < View.enemies.length; i++) {
+                Enemy e = View.enemies[i];
+                if (e.location == locationF1 && locationA1 != -1 && !View.isWall[locationA1] && !View.isEffectWall[locationA1]) {
+                    e.ableToRun = false;
+                } else if (e.location == locationF2 && locationA2 != -1 && !View.isWall[locationA2] && !View.isEffectWall[locationA2]) {
+                    e.ableToRun = false;
+                } else if (e.location == locationF3 && locationA3 != -1 && !View.isWall[locationA3] && !View.isEffectWall[locationA3]) {
+                    e.ableToRun = false;
+                }
             }
         }
         if (time <= 398 && time > 350){
@@ -422,27 +432,27 @@ public class PushAttack {
             if (GridControler.notCrossingAEdge(locationF3, locationF3+dir, dirSide)) {
                 locationA3 = locationF3+dir;
             }
-            if(e.location == locationF1 && locationA1 != -1 && !View.isWall[locationA1] && !View.isEffectWall[locationA1]){
-                e.ableToRun = false;
+            for (int i = 0; i < View.enemies.length; i++) {
+                Enemy e = View.enemies[i];
+                if (e.location == locationF1 && locationA1 != -1 && !View.isWall[locationA1] && !View.isEffectWall[locationA1]) {
+                    e.ableToRun = true;
 
-                e.location = locationA1;
-                View.paintEnemy(locationF1, locationA1);
-            } else if(e.location == locationF2 && locationA2 != -1 && !View.isWall[locationA2] && !View.isEffectWall[locationA2]){
-                e.ableToRun = false;
-                e.location = locationA2;
-                View.paintEnemy(locationF2, locationA2);
-            } else if(e.location == locationF3 && locationA3 != -1 && !View.isWall[locationA3] && !View.isEffectWall[locationA3]){
-                e.ableToRun = false;
-                e.location = locationA3;
-                View.paintEnemy(locationF3, locationA3);
+                    e.location = locationA1;
+                    View.paintEnemy(locationF1, locationA1, View.enemies[i].color);
+                } else if (e.location == locationF2 && locationA2 != -1 && !View.isWall[locationA2] && !View.isEffectWall[locationA2]) {
+                    e.ableToRun = true;
+                    e.location = locationA2;
+                    View.paintEnemy(locationF2, locationA2, View.enemies[i].color);
+                } else if (e.location == locationF3 && locationA3 != -1 && !View.isWall[locationA3] && !View.isEffectWall[locationA3]) {
+                    e.ableToRun = true;
+                    e.location = locationA3;
+                    View.paintEnemy(locationF3, locationA3, View.enemies[i].color);
 
+                }
             }
         }
         if (time <= 365 && time > 363){
             createPWall(locationF1,locationF2,locationF3);
-        }
-        if (time == 364){
-            e.ableToRun = true;
         }
         if (time <= 291 && time > 102) {
             createWall(locationF1,locationF2,locationF3,Color.RED);

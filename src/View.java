@@ -31,7 +31,14 @@ public class View extends JPanel implements KeyListener, MouseListener {
     public static boolean moveDown = false;
     public static boolean moveLeft = false;
     public static boolean moveRight = false;
-    public static Enemy[] enemies;
+    public static boolean clickedV = false;
+    public static boolean clickedC = false;
+    public static boolean clickedM = false;
+    public static boolean clickedUp = false;
+    public static boolean clickedDown = false;
+    public static boolean clickedLeft = false;
+    public static boolean clickedRight = false;
+    public static Enemy[] enemies = new Enemy[0];
     public View() {
         GridLoader();
     }
@@ -58,15 +65,24 @@ public class View extends JPanel implements KeyListener, MouseListener {
     }
 
     public static void createEnemy(){
-        Enemy[] tempEnemies = new Enemy[enemies.length];
+        Enemy[] tempEnemies = new Enemy[enemies.length + 1];
+        for (int i = 0; i < enemies.length; i++) {
+            tempEnemies[i] = enemies[i];
+        }
+        tempEnemies[enemies.length] = new Enemy();
+        enemies = new Enemy[tempEnemies.length];
+        System.arraycopy(tempEnemies, 0, enemies,0, tempEnemies.length);
     }
 
     public static int[] getEnemyLocations(){
-        int[] toReturn = new int[enemies.length];
-        for (int i = 0; i > enemies.length; i++){
-            toReturn[i] = enemies[i].location;
+        if (enemies.length != 0) {
+            int[] toReturn = new int[enemies.length];
+            for (int i = 0; i < enemies.length; i++) {
+                toReturn[i] = enemies[i].location;
+            }
+            return toReturn;
         }
-        return toReturn;
+        return new int[0];
     }
 
     public static Color getNormCellColor(int cell){
@@ -74,9 +90,9 @@ public class View extends JPanel implements KeyListener, MouseListener {
             return Color.YELLOW;
         }
         int[] locations = getEnemyLocations();
-        for (int i = 0; i > locations.length; i++) {
+        for (int i = 0; i < locations.length; i++) {
             if (cell == locations[i]) {
-                return Color.CYAN;
+                return enemies[i].color;
             }
         }
         return normColor[cell];
@@ -119,10 +135,10 @@ public class View extends JPanel implements KeyListener, MouseListener {
         updated[nPlayerLocation] = true;
     }
 
-    public static void paintEnemy(int oEnemyLocation, int nEnemyLocation) {
+    public static void paintEnemy(int oEnemyLocation, int nEnemyLocation, Color color) {
         effectColor[oEnemyLocation] = (getNormCellColor(oEnemyLocation));
         updated[oEnemyLocation] = true;
-        effectColor[nEnemyLocation] = (Color.CYAN);
+        effectColor[nEnemyLocation] = color;
         updated[nEnemyLocation] = true;
         if (nEnemyLocation == playerLocation){
             effectColor[playerLocation] = (Color.YELLOW);
@@ -157,9 +173,8 @@ public class View extends JPanel implements KeyListener, MouseListener {
     }
 
     public static boolean spaceEmpty(int cell, int oCell, int dir){
-        boolean enemys = true;
         int[] locations = getEnemyLocations();
-        for (int i = 0; i > locations.length; i++) {
+        for (int i = 0; i < locations.length; i++) {
             if (locations[i] == cell){
                 return false;
             }
@@ -172,7 +187,7 @@ public class View extends JPanel implements KeyListener, MouseListener {
     }
     public static boolean spaceOpen(int cell){
         int[] locations = getEnemyLocations();
-        for (int i = 0; i > locations.length; i++) {
+        for (int i = 0; i < locations.length; i++) {
             if (locations[i] == cell){
                 return false;
             }
@@ -192,67 +207,58 @@ public class View extends JPanel implements KeyListener, MouseListener {
 
     @Override
     public void keyPressed(KeyEvent k) {
-        if (k.getKeyCode() == KeyEvent.VK_UP) {
+        if (k.getKeyCode() == KeyEvent.VK_W) {
             moveUp = true;
         }
-        if (k.getKeyCode() == KeyEvent.VK_DOWN) {
+        if (k.getKeyCode() == KeyEvent.VK_S) {
             moveDown = true;
         }
-        if (k.getKeyCode() == KeyEvent.VK_LEFT) {
+        if (k.getKeyCode() == KeyEvent.VK_A) {
             moveLeft = true;
         }
-        if (k.getKeyCode() == KeyEvent.VK_RIGHT) {
+        if (k.getKeyCode() == KeyEvent.VK_D) {
             moveRight = true;
         }
+
         if (k.getKeyCode() == KeyEvent.VK_ENTER) {
-            for (int i = 0; i > enemies.length; i++) {
+            for (int i = 0; i < enemies.length; i++) {
                 enemies[i].runASharp();
             }
         }
 
         if (k.getKeyCode() == KeyEvent.VK_SHIFT) {
             resetAll();
-            if (Enemy.paint == true){
-                Enemy.paint = false;
-            } else {
-                Enemy.paint = true;
-            }
+            Enemy.paint = !Enemy.paint;
         }
+
         if (k.getKeyCode() == KeyEvent.VK_BACK_SLASH) {
-            if (createWall == true){
-                createWall = false;
-            } else {
-                createWall = true;
-            }
+            createWall = !createWall;
         }
 
 
-        if (k.getKeyCode() == KeyEvent.VK_W) {
-            PushAttack.startUpAttack();
+        if (k.getKeyCode() == KeyEvent.VK_UP) {
+            clickedUp = true;
         }
-        if (k.getKeyCode() == KeyEvent.VK_D) {
-            PushAttack.startRightAttack();
+        if (k.getKeyCode() == KeyEvent.VK_RIGHT) {
+            clickedRight = true;
         }
-        if (k.getKeyCode() == KeyEvent.VK_A) {
-            PushAttack.startLeftAttack();
+        if (k.getKeyCode() == KeyEvent.VK_LEFT) {
+            clickedLeft = true;
         }
-        if (k.getKeyCode() == KeyEvent.VK_S) {
-            PushAttack.startDownAttack();
+        if (k.getKeyCode() == KeyEvent.VK_DOWN) {
+            clickedDown = true;
         }
 
         if (k.getKeyCode() == KeyEvent.VK_M) {
-            createEnemy();
+            clickedM = true;
         }
 
         if (k.getKeyCode() == KeyEvent.VK_V) {
-            int[] locations = getEnemyLocations();
-            for (int i = 0; i > locations.length; i++) {
-                LineOfSight.run(locations[i],2);
-            }
+            clickedV = true;
         }
 
         if (k.getKeyCode() == KeyEvent.VK_C) {
-            resetAll();
+            clickedC = true;
         }
 
         if (k.getKeyCode() == KeyEvent.VK_F) {
@@ -292,10 +298,10 @@ public class View extends JPanel implements KeyListener, MouseListener {
             }
         } else {
             int[] locations = getEnemyLocations();
-            for (int i = 0; i > locations.length; i++) {
+            for (int i = 0; i < locations.length; i++) {
                 if (chosenCell == locations[i]){
                     locations[i] = selectedCell;
-                    paintEnemy(chosenCell, locations[i]);
+                    paintEnemy(chosenCell, locations[i], enemies[i].color);
                 }
             }
         }
