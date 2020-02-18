@@ -23,7 +23,7 @@ public class View extends JPanel implements KeyListener, MouseListener {
     public static boolean[] hasEffect;
     public static int[] AVal;
     public static int playerLocation = sizeOfGrid*2 +2;
-    public static boolean createWall = true;
+    public static boolean debug = false;
     public static boolean fov = false;
     public static boolean[] canSee = new boolean[sizeOfGrid*sizeOfGrid];
     public static boolean[] updated;
@@ -147,14 +147,14 @@ public class View extends JPanel implements KeyListener, MouseListener {
     }
 
     public static void paintWall( int nWallLocation) {
-        if(spaceOpen(nWallLocation)) {
+        if(notOcupied(nWallLocation)) {
             normColor[nWallLocation] = Color.darkGray;
             updateCell(nWallLocation,Color.darkGray);
         }
     }
 
     public static void paintFloor(int nWallLocation) {
-        if(spaceOpen(nWallLocation)) {
+        if(notOcupied(nWallLocation)) {
             if (nWallLocation % 2 == 0) {
                 normColor[nWallLocation] = new Color(190, 190, 190);
                 updateCell(nWallLocation, new Color(190, 190, 190));
@@ -182,10 +182,14 @@ public class View extends JPanel implements KeyListener, MouseListener {
         return (GridControler.notCrossingAEdge(oCell,cell,dir) && playerLocation != cell & !isWall[cell] && !isEffectWall[cell]);
     }
 
+    public static boolean pathfindThrogh(int cell){
+        return (playerLocation != cell & !isWall[cell] && !isEffectWall[cell]);
+    }
+
     public static boolean spaceNotBlocked(int cell, int oCell, int dir){
         return (GridControler.notCrossingAEdge(oCell,cell,dir) && (!isWall[cell] && !isEffectWall[cell]));
     }
-    public static boolean spaceOpen(int cell){
+    public static boolean notOcupied(int cell){
         int[] locations = getEnemyLocations();
         for (int i = 0; i < locations.length; i++) {
             if (locations[i] == cell){
@@ -195,6 +199,23 @@ public class View extends JPanel implements KeyListener, MouseListener {
         return playerLocation != cell;
     }
 
+    public static int getFavorablity(int cell){
+        if (isWall[cell]){
+            return 10;
+        }
+
+        if (isEffectWall[cell]){
+            return 4;
+        }
+
+        int[] locations = getEnemyLocations();
+        for (int i = 0; i < locations.length; i++) {
+            if (locations[i] == cell){
+                return 2;
+            }
+        }
+        return 0;
+    }
 
     static void DTSC(int cell, int choice) {
         switch (choice) {
@@ -221,9 +242,8 @@ public class View extends JPanel implements KeyListener, MouseListener {
         }
 
         if (k.getKeyCode() == KeyEvent.VK_ENTER) {
-            for (int i = 0; i < enemies.length; i++) {
-                enemies[i].runASharp();
-            }
+            Enemy.running = !Enemy.running;
+            Enemy.ran = true;
         }
 
         if (k.getKeyCode() == KeyEvent.VK_SHIFT) {
@@ -232,7 +252,7 @@ public class View extends JPanel implements KeyListener, MouseListener {
         }
 
         if (k.getKeyCode() == KeyEvent.VK_BACK_SLASH) {
-            createWall = !createWall;
+            debug = !debug;
         }
 
 
@@ -282,26 +302,32 @@ public class View extends JPanel implements KeyListener, MouseListener {
     @Override
     public void mouseReleased(MouseEvent m) {
         int selectedCell = selectedCellFinder(m.getLocationOnScreen());
-        if (selectedCell == chosenCell) {
-            if (createWall){
-                if(spaceOpen(selectedCell)) {
-                    if (isWall[selectedCell] == true) {
-                        isWall[selectedCell] = false;
-                        paintFloor(selectedCell);
-                    } else {
-                        isWall[selectedCell] = true;
-                        paintWall(selectedCell);
+        if (selectedCell != -1) {
+            if (selectedCell == chosenCell) {
+                if (!debug) {
+                    if (notOcupied(selectedCell)) {
+                        if (isWall[selectedCell] == true) {
+                            isWall[selectedCell] = false;
+                            paintFloor(selectedCell);
+                        } else {
+                            isWall[selectedCell] = true;
+                            paintWall(selectedCell);
+                        }
                     }
+                } else {
+                    System.out.println("cell: " + selectedCell + " normColor: " + normColor[selectedCell] + " effectColor: " + effectColor[selectedCell]);
                 }
             } else {
-                System.out.println("cell: " + selectedCell + " normColor: " + normColor[selectedCell] + " effectColor: " + effectColor[selectedCell]);
-            }
-        } else {
-            int[] locations = getEnemyLocations();
-            for (int i = 0; i < locations.length; i++) {
-                if (chosenCell == locations[i]){
-                    locations[i] = selectedCell;
-                    paintEnemy(chosenCell, locations[i], enemies[i].color);
+                if (!debug) {
+                    int[] locations = getEnemyLocations();
+                    for (int i = 0; i < locations.length; i++) {
+                        if (chosenCell == locations[i]) {
+                            enemies[i].location = selectedCell;
+                            paintEnemy(chosenCell, locations[i], enemies[i].color);
+                        }
+                    }
+                } else {
+                    System.out.println(PathFind.realDistanceFrom(chosenCell, selectedCell));
                 }
             }
         }

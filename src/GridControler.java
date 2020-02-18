@@ -59,50 +59,50 @@ public class GridControler {
         return true;
     }
 
-    public static void doToSurroundCells(int cell, int choice, int from, boolean cross){
+    public static void doToSurroundCells(int cell, int choice, int from, boolean corners){
         int oporator = cell - sizeOfGrid;
         if (notCrossingAEdge(cell, (oporator),0)) {
-            sendBack(oporator, choice, from, cell, "u");
+            sendBack(oporator, choice, from, cell, "u",0);
         }
         oporator = cell - 1;
         if (notCrossingAEdge(cell, (oporator),1)) {
-            sendBack(oporator, choice, from, cell, "l");
+            sendBack(oporator, choice, from, cell, "l",1);
         }
         oporator = cell + 1;
         if (notCrossingAEdge(cell, (oporator),2)) {
-            sendBack(oporator, choice, from, cell, "r");
+            sendBack(oporator, choice, from, cell, "r",2);
         }
         oporator = cell + sizeOfGrid;
         if (notCrossingAEdge(cell, (oporator),0)) {
-            sendBack(oporator, choice, from, cell, "d");
+            sendBack(oporator, choice, from, cell, "d",3);
         }
-        if (cross == false) {
+        if (corners) {
             oporator = cell - sizeOfGrid - 1;
             if (notCrossingAEdge(cell, (oporator), 1)) {
-                sendBack(oporator, choice, from, cell, "ul");
+                sendBack(oporator, choice, from, cell, "ul",4);
             }
             oporator = cell - sizeOfGrid + 1;
             if (notCrossingAEdge(cell, (oporator),2)) {
-                sendBack(oporator, choice, from, cell, "ur");
+                sendBack(oporator, choice, from, cell, "ur",5);
             }
             oporator = cell + sizeOfGrid - 1;
             if (notCrossingAEdge(cell, (oporator),1)) {
-                sendBack(oporator, choice, from, cell, "dl");
+                sendBack(oporator, choice, from, cell, "dl",6);
             }
             oporator = cell + sizeOfGrid + 1;
             if (notCrossingAEdge(cell, (oporator),2)) {
-                sendBack(oporator, choice, from, cell, "dr");
+                sendBack(oporator, choice, from, cell, "dr",7);
             }
         }
     }
 
-    private static void sendBack(int cell, int choice, int from, int oCell, String direction) {
+    private static void sendBack(int cell, int choice, int from, int oCell, String direction, int directionForLoop) {
         switch (from){
             case 1:
                 View.DTSC(cell, choice);
                 break;
             case 2:
-                PathFind.DTSC(cell, choice, oCell);
+                PathFind.DTSC(cell, choice, oCell, directionForLoop);
                 break;
             case 3:
                 PushAttack.DTSC(cell, choice, direction);

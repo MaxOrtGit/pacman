@@ -24,7 +24,7 @@ public class TimerRunner extends TimerTask {
             View.effectColor[locations[i]] = View.enemies[i].color;
             View.updated[locations[i]] = true;
         }
-        View.effectColor[View.playerLocation] = (Color.YELLOW);
+        View.effectColor[View.playerLocation] = Color.YELLOW;
         View.updated[View.playerLocation] = true;
         playerInput();
         pushAttack();

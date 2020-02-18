@@ -11,6 +11,7 @@ public class LineOfSight {
                 switch (type) {
                     case (1):
                         return i;
+
                     case (2):
                         toReturn = i;
                         break;

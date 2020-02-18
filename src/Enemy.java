@@ -6,13 +6,14 @@ public class Enemy<addToPath> {
     public int location;
     public static int sizeOfGrid = View.sizeOfGrid;
     public boolean ableToRun = true;
-    public boolean running = true;
+    public static boolean running = false;
     public static boolean ran = false;
     public static boolean paint = false;
     public int target = -1;
     public boolean roaming = false;
     public int untilMove = 0;
-    public int moveTick = 30;
+    Random rand = new Random();
+    public int moveTick = rand.nextInt(30);
     public int lookTick = 2;
     public Color color;
 
@@ -35,17 +36,9 @@ public class Enemy<addToPath> {
         }
     }
 
-    public void runASharp() {
-        if (running == true){
-            running = false;
-        } else {
-            running = true;
-        }
-        ran = true;
-    }
-
     public void tick() {
-        if (ran == true && running == true) {
+        if (ran && running) {
+
             if (lookTick == 0) {
                 lookAI();
                 lookTick = 2;
@@ -75,15 +68,15 @@ public class Enemy<addToPath> {
     }
 
     public void pathfind() {
-
         untilMove = 1;
-        int[] newLocation = PathFind.startPathfindAI(paint, roaming, target, location);
-        if (newLocation[0] == -2) {
+        int[] newLocation = PathFind.startPathfindAI(paint, target, location);
+        if (newLocation[0] == -2 && View.spaceEmpty(newLocation[1], newLocation[1], 0)) {
             int oEnemyLocation = location;
             int nEnemyLocation = newLocation[1];
             location = nEnemyLocation;
             View.paintEnemy(oEnemyLocation, nEnemyLocation, color);
             if (paint && target != View.playerLocation) {
+                View.resetAll();
                 View.effectColor[target] = (PushAttack.getGradient(new Color(200, 0, 0), View.getNormCellColor(target), .25));
                 View.updated[target] = true;
             }
@@ -92,8 +85,7 @@ public class Enemy<addToPath> {
                 View.updated[View.playerLocation] = true;
             }
         }
-        if (newLocation[0] >= 0) {
-            System.out.println("hi");
+        if (newLocation[0] >= 0 && View.spaceEmpty(newLocation[1], newLocation[1], 0)) {
             int oEnemyLocation = location;
             int nEnemyLocation = newLocation[1];
             location = nEnemyLocation;
