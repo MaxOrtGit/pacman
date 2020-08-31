@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.net.http.WebSocket;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -8,6 +10,7 @@ public class TimerRunner extends TimerTask {
 
     public static Timer timer = new Timer();
     public static boolean firstRun = true;
+    public static int sizeOfGrid = View.sizeOfGrid;
 
     public static void firstRun() {
         PushAttack.hasEffect = new int[View.sizeOfGrid * View.sizeOfGrid];
@@ -29,7 +32,11 @@ public class TimerRunner extends TimerTask {
         playerInput();
         pushAttack();
         enemy();
-        View.resetOptimized();
+        if (!View.canSeeAll) {
+            LineOfSight.run(View.playerLocation, 3);
+        }
+        View.resetOptimized(View.canSeeAll);
+        Arrays.fill(View.canSee, false);
         Arrays.fill(View.updated, false);
     }
 
@@ -96,6 +103,19 @@ public class TimerRunner extends TimerTask {
             }
             View.clickedV = false;
         }
+
+        if (View.clickedG){
+            View.canSeeAll = !View.canSeeAll;
+            System.out.println(View.canSeeAll);
+            View.clickedG = false;
+        }
+
+        if (View.clickedB){
+            View.resetAll();
+            LineOfSight.run(View.playerLocation, 2);
+            View.clickedB = false;
+        }
+
         if (View.clickedC){
             View.resetAll();
             View.clickedC = false;
@@ -105,20 +125,60 @@ public class TimerRunner extends TimerTask {
             View.clickedM = false;
         }
 
+        if (View.clickedU) {
+            for (int x = 0; x < sizeOfGrid * sizeOfGrid; x++) {
+                View.makeFloor(x);
+            }
+            for (int x = 0; x < sizeOfGrid; x++) {
+                View.makeWall(x);
+            }
+            for (int x = 0; x < sizeOfGrid; x++) {
+                View.makeWall(x * sizeOfGrid);
+            }
+            for (int x = 1; x < sizeOfGrid; x++) {
+                View.makeWall(x * sizeOfGrid - 1);
+            }
+            for (int x = 0; x < sizeOfGrid; x++) {
+                View.makeWall(x + (sizeOfGrid * (sizeOfGrid - 1)));
+            }
+            View.clickedU = false;
+        }
+
+        if (View.clickedI) {
+            for (int x = 0; x < sizeOfGrid * sizeOfGrid; x++) {
+                View.makeFloor(x);
+            }
+            View.clickedI = false;
+        }
+
+        if (View.clickedO) {
+            Random rand = new Random();
+
+            for (int i = 0; i < 5; i++) {
+                int toBeWall = rand.nextInt(sizeOfGrid*sizeOfGrid);
+                if (!View.isWall[toBeWall] && toBeWall != View.playerLocation){
+                    View.makeWall(toBeWall);
+                } else {
+                    i--;
+                }
+            }
+            View.clickedO = false;
+        }
+
         if (View.clickedUp) {
-            PushAttack.startUpAttack();
+//            PushAttack.startUpAttack();
             View.clickedUp = false;
         }
         if (View.clickedRight) {
-            PushAttack.startRightAttack();
+//            PushAttack.startRightAttack();
             View.clickedRight = false;
         }
         if (View.clickedLeft) {
-            PushAttack.startLeftAttack();
+//            PushAttack.startLeftAttack();
             View.clickedLeft = false;
         }
         if (View.clickedDown) {
-            PushAttack.startDownAttack();
+//            PushAttack.startDownAttack();
             View.clickedDown = false;
         }
     }

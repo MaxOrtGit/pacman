@@ -25,6 +25,7 @@ public class View extends JPanel implements KeyListener, MouseListener {
     public static int playerLocation = sizeOfGrid*2 +2;
     public static boolean debug = false;
     public static boolean fov = false;
+    public static boolean canSeeAll = true;
     public static boolean[] canSee = new boolean[sizeOfGrid*sizeOfGrid];
     public static boolean[] updated;
     public static boolean moveUp = false;
@@ -32,7 +33,12 @@ public class View extends JPanel implements KeyListener, MouseListener {
     public static boolean moveLeft = false;
     public static boolean moveRight = false;
     public static boolean clickedV = false;
+    public static boolean clickedG = false;
+    public static boolean clickedB = false;
     public static boolean clickedC = false;
+    public static boolean clickedI = false;
+    public static boolean clickedU = false;
+    public static boolean clickedO = false;
     public static boolean clickedM = false;
     public static boolean clickedUp = false;
     public static boolean clickedDown = false;
@@ -113,10 +119,12 @@ public class View extends JPanel implements KeyListener, MouseListener {
         }
     }
 
-    public static void resetOptimized(){
+    public static void resetOptimized(boolean seeAll){
         for (int i = 0; i < sizeOfGrid*sizeOfGrid; i++) {
-            if (updated[i]) {
+            if ((!seeAll || updated[i]) && (seeAll || canSee[i])) {
                 gridCell[i].setBackground(effectColor[i]);
+            } else if (!seeAll){
+                gridCell[i].setBackground(Color.black);
             }
         }
     }
@@ -146,15 +154,17 @@ public class View extends JPanel implements KeyListener, MouseListener {
         }
     }
 
-    public static void paintWall( int nWallLocation) {
+    public static void makeWall(int nWallLocation) {
         if(notOcupied(nWallLocation)) {
+            isWall[nWallLocation] = true;
             normColor[nWallLocation] = Color.darkGray;
             updateCell(nWallLocation,Color.darkGray);
         }
     }
 
-    public static void paintFloor(int nWallLocation) {
+    public static void makeFloor(int nWallLocation) {
         if(notOcupied(nWallLocation)) {
+            isWall[nWallLocation] = false;
             if (nWallLocation % 2 == 0) {
                 normColor[nWallLocation] = new Color(190, 190, 190);
                 updateCell(nWallLocation, new Color(190, 190, 190));
@@ -277,8 +287,28 @@ public class View extends JPanel implements KeyListener, MouseListener {
             clickedV = true;
         }
 
+        if (k.getKeyCode() == KeyEvent.VK_G) {
+            clickedG = true;
+        }
+
+        if (k.getKeyCode() == KeyEvent.VK_B) {
+            clickedB = true;
+        }
+
         if (k.getKeyCode() == KeyEvent.VK_C) {
             clickedC = true;
+        }
+
+        if (k.getKeyCode() == KeyEvent.VK_I) {
+            clickedI = true;
+        }
+
+        if (k.getKeyCode() == KeyEvent.VK_U) {
+            clickedU = true;
+        }
+
+        if (k.getKeyCode() == KeyEvent.VK_O) {
+            clickedO = true;
         }
 
         if (k.getKeyCode() == KeyEvent.VK_F) {
@@ -307,11 +337,9 @@ public class View extends JPanel implements KeyListener, MouseListener {
                 if (!debug) {
                     if (notOcupied(selectedCell)) {
                         if (isWall[selectedCell] == true) {
-                            isWall[selectedCell] = false;
-                            paintFloor(selectedCell);
+                            makeFloor(selectedCell);
                         } else {
-                            isWall[selectedCell] = true;
-                            paintWall(selectedCell);
+                            makeWall(selectedCell);
                         }
                     }
                 } else {
@@ -365,9 +393,7 @@ public class View extends JPanel implements KeyListener, MouseListener {
         for (int i = 0; i < walls; i++) {
             int toBeWall = rand.nextInt(sizeOfGrid*sizeOfGrid);
             if (isWall[toBeWall] != true && toBeWall != playerLocation){
-                isWall[toBeWall] = true;
-                effectColor[toBeWall] = (Color.DARK_GRAY);
-                normColor[toBeWall] = (Color.DARK_GRAY);
+                makeWall(toBeWall);
             } else {
                 i--;
             }

@@ -56,7 +56,7 @@ public class PushAttack {
     public static Enemy[] DPushed;
 
     public static int[] hasEffect;
-    public static Color[] saveColor = new Color[sizeOfGrid * sizeOfGrid];;
+    public static Color[] saveColor = new Color[sizeOfGrid * sizeOfGrid];
 
     public static void main(String[] args) {
     }

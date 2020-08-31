@@ -31,33 +31,43 @@ public class GridControler {
 
     }
 
-    public static boolean notCrossingAEdge(int before, int after, int toside) {
-        // 0 is up/down. 1 is going left. 2 is going right.
-
-        if ((before < 0 || before > sizeOfGrid * sizeOfGrid - 1) && toside != 0){
+    public static boolean notCrossingAEdge(int before, int after, int old) {
+        if (!((before >= 0 && before <= sizeOfGrid * sizeOfGrid - 1) && (after >= 0 && after <= sizeOfGrid * sizeOfGrid - 1))){
             return false;
         }
-        if (after >= 0 && after <= sizeOfGrid * sizeOfGrid - 1) {
-            for (int i = 0; i < sizeOfGrid; i++) {
-                int leftSide = sizeOfGrid * i;
-                int rightSide = (sizeOfGrid * i) + sizeOfGrid - 1;
-                if (before >= leftSide && before <= rightSide){
-                    if (toside == 1) {
-                        if (after == rightSide - sizeOfGrid){
-                            return false;
-                        }
-                    } else if (toside == 2){
-                        if (after == leftSide + sizeOfGrid){
-                            return false;
-                        }
-                    }
-                }
-            }
-        } else {
-            return false;
+        if(before / 11 == after / 11){
+            return true;
         }
-        return true;
+        return before % 11 == after % 11;
     }
+
+//    public static boolean 1notCrossingAEdge(int before, int after, int toside) {
+//        // 0 is up/down. 1 is going left. 2 is going right.
+//
+//        if ((before < 0 || before > sizeOfGrid * sizeOfGrid - 1) && toside != 0){
+//            return false;
+//        }
+//        if (after >= 0 && after <= sizeOfGrid * sizeOfGrid - 1) {
+//            for (int i = 0; i < sizeOfGrid; i++) {
+//                int leftSide = sizeOfGrid * i;
+//                int rightSide = (sizeOfGrid * i) + sizeOfGrid - 1;
+//                if (before >= leftSide && before <= rightSide){
+//                    if (toside == 1) {
+//                        if (after == rightSide - sizeOfGrid){
+//                            return false;
+//                        }
+//                    } else if (toside == 2){
+//                        if (after == leftSide + sizeOfGrid){
+//                            return false;
+//                        }
+//                    }
+//                }
+//            }
+//        } else {
+//            return false;
+//        }
+//        return true;
+//    }
 
     public static void doToSurroundCells(int cell, int choice, int from, boolean corners){
         int oporator = cell - sizeOfGrid;

@@ -3,256 +3,160 @@ import java.awt.*;
 public class LineOfSight {
     public static int sizeOfGrid = View.sizeOfGrid;
 
-    public static int run(int start, int type){
+    public static int run(int start, int type) {
         int toReturn = -1;
-        for (int x = 0; x < sizeOfGrid; x++){
-            int i = makeLine(start, x, type);
-            if (i != -1){
-                switch (type) {
-                    case (1):
-                        return i;
+//            makeLine(start,305,type,305>180);
+//        makeLine(start,125,type,125>180);
+        for (double i = 0; i < 1439; i+=1) {
+            int j = (int)i % 360;
+            int k = (int)i / 360;
+            switch (k){
+                case (0):
+                    makeLine((start % sizeOfGrid)-0.5,(start / sizeOfGrid)-0.5, j, type, j > 180);
+                    break;
+                case (1):
+                    makeLine((start % sizeOfGrid)-0.5,(start / sizeOfGrid)+0.5, j, type, j > 180);
+                    break;
+                case (2):
+                    makeLine((start % sizeOfGrid)+0.5,(start / sizeOfGrid)-0.5, j, type, j > 180);
+                    break;
+                case (3):
+                    makeLine((start % sizeOfGrid)+0.5,(start / sizeOfGrid)+0.5, j, type, j > 180);
+                    break;
+                default:
+                    System.out.println(i + "  " + k);
+                    break;
+            }
 
-                    case (2):
-                        toReturn = i;
-                        break;
-                }
-            }
         }
-        for (int x = 0; x < sizeOfGrid; x++){
-            int i = makeLine(start, x * sizeOfGrid, type);
-            if (i != -1){
-                switch (type) {
-                    case (1):
-                        return i;
-                    case (2):
-                        toReturn = i;
-                        break;
-                }
-            }
-        }
-        for (int x = 1; x < sizeOfGrid; x++){
-            int i = makeLine(start, x * sizeOfGrid - 1, type);
-            if (i != -1){
-                switch (type) {
-                    case (1):
-                        return i;
-                    case (2):
-                        toReturn = i;
-                        break;
-                }
-            }
-        }
-        for (int x = 0; x < sizeOfGrid; x++){
-            int i = makeLine(start, x + (sizeOfGrid * (sizeOfGrid-1)), type);
-            if (i != -1){
-                switch (type) {
-                    case (1):
-                        return i;
-                    case (2):
-                        toReturn = i;
-                        break;
-                }
-            }
-        }
+
         return toReturn;
     }
 
-    public static int makeLine(int start, int end, int type){
-        int sx = start % sizeOfGrid;
-        int sy = start / sizeOfGrid;
-        int ex = end % sizeOfGrid;
-        int ey = end / sizeOfGrid;
-        int dx = ex - sx;
-        int dy = ey - sy;
 
-        double slope = (double)(ey-sy)/(ex-sx);
-        double b = sy;
+    public static int makeLine(double sx, double sy, double deg, int type, boolean flip) {
+
+        double slope = Math.tan(Math.toRadians(deg));
         boolean done = false;
+        double t = 0;
+        int mod = 1;
+        if (flip) {
+            mod = -1;
+        }
+        int oCell = -1;
 
-        if (Math.abs(dx) > Math.abs(dy)) {
-            if (dx > 0){
-                for(int s = sx; s < ex; s++) {
-                    int yFound  = (int)(Math.round(((s - sx + 0.5) * slope) + b));
-                    int cell = (int)(Math.round(s-.5)) + ((yFound) * sizeOfGrid);
-                    if (View.isWall[cell] != false || View.isEffectWall[cell] != false) {
-                        done = true;
-                        break;
+        if (slope < 1.0 && slope > -1.0) {
+            while (true) {
+                int cell = (int) ((double) sx + t) + ((int) (((double) sy + ((t + (0.5 * mod)) * slope)) + 0.5) * sizeOfGrid);
+                if (oCell != -1 && !GridControler.notCrossingAEdge(oCell, cell, 0)) {
+                    break;
+                }
+                if (oCell == -1 && !(cell >= 0 && cell <= sizeOfGrid * sizeOfGrid - 1)){
+                    System.out.println("break");
+                    break;
+                }
+                if (View.isWall[cell] || View.isEffectWall[cell]) {
+                    if (type == 3) {
+                        View.canSee[cell] = true;
                     }
-                    if (cell == View.playerLocation) {
-                        if (type == 1) {
-                            return cell;
-                        }
-                    }
-                    if (type == 2) {
-                        View.effectColor[cell] = (PushAttack.getGradient(Color.CYAN, View.getNormCellColor(cell), .25));
-                        View.updated[cell] = true;
-                    }
-                    cell = (int)(Math.round(s+.5)) + ((yFound) * sizeOfGrid);
-                    if (View.isWall[cell] != false || View.isEffectWall[cell] != false) {
-                        done = true;
-                        break;
-                    }
-                    if (cell == View.playerLocation) {
-                        if (type == 1) {
-                            return cell;
-                        }
-                    }
-                    if (type == 2) {
-                        View.effectColor[cell] = (PushAttack.getGradient(Color.CYAN, View.getNormCellColor(cell), .25));
-                        View.updated[cell] = true;
+                    break;
+                }
+                if (cell == View.playerLocation) {
+                    if (type == 1) {
+                        return cell;
                     }
                 }
-                int yFound  = (int)(Math.round(((ex - sx + 0.5) * slope) + b));
-                int cell = (int)(Math.round(ex-.5)) + ((yFound) * sizeOfGrid);
-                if (View.isWall[cell] == false && View.isEffectWall[cell] == false && !done) {
-                    if (cell == View.playerLocation) {
-                        if (type == 1) {
-                            return cell;
-                        }
+                if (type == 2) {
+                    View.effectColor[cell] = (PushAttack.getGradient(Color.CYAN, View.getNormCellColor(cell), .25));
+                    View.updated[cell] = true;
+                }
+                if (type == 3) {
+                    View.canSee[cell] = true;
+                }
+                oCell = cell;
+                cell += mod;
+                double s = 1.5;
+                s += (mod * 0.5);
+                if (!GridControler.notCrossingAEdge(oCell, cell, (int) s)) {
+                    break;
+                }
+                if (View.isWall[cell] || View.isEffectWall[cell]) {
+                    if (type == 3) {
+                        View.canSee[cell] = true;
                     }
-                    if (type == 2) {
-                        View.effectColor[cell] = (PushAttack.getGradient(Color.CYAN, View.getNormCellColor(cell), .25));
-                        View.updated[cell] = true;
+                    break;
+                }
+                if (cell == View.playerLocation) {
+                    if (type == 1) {
+                        return cell;
                     }
                 }
-            } else {
-                for(int s = sx; s > ex; s--) {
-                    int yFound  = (int)(Math.round(((s - sx - 0.5) * slope) + b));
-                    int cell = (int)(Math.round(s+.5)) + -1 + ((yFound) * sizeOfGrid);
-                    if (View.isWall[cell] != false || View.isEffectWall[cell] != false) {
-                        done = true;
-                        break;
-                    }
-                    if (cell == View.playerLocation) {
-                        if (type == 1) {
-                            return cell;
-                        }
-                    }
-                    if (type == 2) {
-                        View.effectColor[cell] = (PushAttack.getGradient(Color.CYAN, View.getNormCellColor(cell), .25));
-                        View.updated[cell] = true;
-                    }
-                    cell = (int)(Math.round(s-.5)) + -1 + ((yFound) * sizeOfGrid);
-                    if (View.isWall[cell] != false || View.isEffectWall[cell] != false) {
-                        done = true;
-                        break;
-                    }
-                    if (cell == View.playerLocation) {
-                        if (type == 1) {
-                            return cell;
-                        }
-                    }
-                    if (type == 2) {
-                        View.effectColor[cell] = (PushAttack.getGradient(Color.CYAN, View.getNormCellColor(cell), .25));
-                    }
+                if (type == 2) {
+                    View.effectColor[cell] = (PushAttack.getGradient(Color.CYAN, View.getNormCellColor(cell), .25));
+                    View.updated[cell] = true;
                 }
-                int yFound  = (int)(Math.round(((ex - sx - 0.5) * slope) + b));
-                int cell = (int)(Math.round(ex+.5)) + -1 + ((yFound) * sizeOfGrid);
-                if (View.isWall[cell] == false && View.isEffectWall[cell] == false && !done) {
-                    if (cell == View.playerLocation) {
-                        if (type == 1) {
-                            return cell;
-                        }
-                    }
-                    if (type == 2) {
-                        View.effectColor[cell] = (PushAttack.getGradient(Color.CYAN, View.getNormCellColor(cell), .25));
-                        View.updated[cell] = true;
-                    }
+                if (type == 3) {
+                    View.canSee[cell] = true;
                 }
+                oCell = cell;
+                t += mod;
             }
         } else {
-            if (dy > 0){
-                for(int s = sy; s < ey; s++) {
-                    int xFound  = (int)(Math.round(((s - sy + 0.49999) * (1/slope))) + sx);
-                    int cell = xFound + ((int)(Math.round(s-.5)) * sizeOfGrid);
-                    if (View.isWall[cell] != false || View.isEffectWall[cell] != false) {
-                        done = true;
-                        break;
+            slope = Math.tan(Math.toRadians(deg - 90));
+            while (true) {
+                int cell = (int) (((double) sx + ((t + (0.5 * mod)) * slope)) + 0.5) + ((int) (Math.round((double) sy + t)) * sizeOfGrid);
+                double s = 1.5;
+                s += (mod * 0.5);
+                if (oCell != -1 && !GridControler.notCrossingAEdge(oCell, cell, (int) s)) {
+                    break;
+                }
+                if (View.isWall[cell] || View.isEffectWall[cell]) {
+                    done = true;
+                    if (type == 3) {
+                        View.canSee[cell] = true;
                     }
-                    if (cell == View.playerLocation) {
-                        if (type == 1) {
-                            return cell;
-                        }
-                    }
-                    if (type == 2) {
-                        View.effectColor[cell] = (PushAttack.getGradient(Color.CYAN, View.getNormCellColor(cell), .25));
-                        View.updated[cell] = true;
-                    }
-                    cell = xFound + ((int)(Math.round(s+.5)) * sizeOfGrid);
-                    if (View.isWall[cell] != false || View.isEffectWall[cell] != false) {
-                        done = true;
-                        break;
-                    }
-                    if (cell == View.playerLocation) {
-                        if (type == 1) {
-                            return cell;
-                        }
-                    }
-                    if (type == 2) {
-                        View.effectColor[cell] = (PushAttack.getGradient(Color.CYAN, View.getNormCellColor(cell), .25));
-                        View.updated[cell] = true;
+                    break;
+                }
+                if (cell == View.playerLocation) {
+                    if (type == 1) {
+                        return cell;
                     }
                 }
-                int xFound  = (int)(Math.round(((ey - sy +  0.49999) * (1/slope))) + sx);
-                int cell = xFound + ((int)(Math.round(ey-.5)) * sizeOfGrid);
-                if (View.isWall[cell] == false && View.isEffectWall[cell] == false && !done) {
-                    if (cell == View.playerLocation) {
-                        if (type == 1) {
-                            return cell;
-                        }
+                if (type == 2) {
+                    View.effectColor[cell] = (PushAttack.getGradient(Color.CYAN, View.getNormCellColor(cell), .25));
+                    View.updated[cell] = true;
+                }
+                if (type == 3) {
+                    View.canSee[cell] = true;
+                }
+                oCell = cell;
+                cell += mod * 11;
+                if (!GridControler.notCrossingAEdge(oCell, cell, 0)) {
+                    break;
+                }
+                if (View.isWall[cell] || View.isEffectWall[cell]) {
+                    if (type == 3) {
+                        View.canSee[cell] = true;
                     }
-                    if (type == 2) {
-                        View.effectColor[cell] = (PushAttack.getGradient(Color.CYAN, View.getNormCellColor(cell), .25));
-                        View.updated[cell] = true;
+                    break;
+                }
+                if (cell == View.playerLocation) {
+                    if (type == 1) {
+                        return cell;
                     }
                 }
-            } else {
-                for(int s = sy; s > ey; s--) {
-                    int xFound  = (int)(Math.round(((s - sy - 0.5) * (1/slope))) + sx);
-                    int cell = xFound + ((int)(Math.round(s+.5)-1) * sizeOfGrid);
-                    if (View.isWall[cell] != false || View.isEffectWall[cell] != false) {
-                        done = true;
-                        break;
-                    }
-                    if (cell == View.playerLocation) {
-                        if (type == 1) {
-                            return cell;
-                        }
-                    }
-                    if (type == 2) {
-                        View.effectColor[cell] = (PushAttack.getGradient(Color.CYAN, View.getNormCellColor(cell), .25));
-                        View.updated[cell] = true;
-                    }
-                    cell = xFound + ((int)(Math.round(s-.5)-1) * sizeOfGrid);
-                    if (View.isWall[cell] != false || View.isEffectWall[cell] != false) {
-                        done = true;
-                        break;
-                    }
-                    if (cell == View.playerLocation) {
-                        if (type == 1) {
-                            return cell;
-                        }
-                    }
-                    if (type == 2) {
-                        View.effectColor[cell] = (PushAttack.getGradient(Color.CYAN, View.getNormCellColor(cell), .25));
-                        View.updated[cell] = true;
-                    }
+                if (type == 2) {
+                    View.effectColor[cell] = (PushAttack.getGradient(Color.CYAN, View.getNormCellColor(cell), .25));
+                    View.updated[cell] = true;
                 }
-                int xFound  = (int)(Math.round(((ey - sy - 0.5) * (1/slope))) + sx);
-                int cell = xFound + ((int)(Math.round(ey+.5)-1) * sizeOfGrid);
-                if (View.isWall[cell] == false && View.isEffectWall[cell] == false && !done) {
-                    if (cell == View.playerLocation) {
-                        if (type == 1) {
-                            return cell;
-                        }
-                    }
-                    if (type == 2) {
-                        View.effectColor[cell] = (PushAttack.getGradient(Color.CYAN, View.getNormCellColor(cell), .25));
-                        View.updated[cell] = true;
-                    }
+                if (type == 3) {
+                    View.canSee[cell] = true;
                 }
+                oCell = cell;
+                t += mod;
             }
         }
         return -1;
     }
+
 }
