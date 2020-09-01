@@ -61,58 +61,39 @@ public class PushAttack {
     public static void main(String[] args) {
     }
 
-    public static Color getGradient(Color col1, Color col2, double per){
-        //per of cal1
-        return new Color((int)(col1.getRed()*per + col2.getRed()*(1-per)), (int)(col1.getGreen()*per + col2.getGreen()*(1-per)), (int)(col1.getBlue()*per + col2.getBlue()*(1-per)));
-    }
-    public static int overFlow(int num){
-        if (num > 255){
-            return 255;
-        } else {
-            if (num < 0) {
-                return 0;
-            } else {
-                return num;
-            }
-        }
-    }
-    public static Color addColors(Color col1, Color col2, Color org) {
-        //Color grad = getGradient(org, new Color(overFlow(col1.getRed() + col2.getRed() - orGridControler.getRed()), overFlow(col1.getGreen() + col2.getGreen() - orGridControler.getGreen()), overFlow(col1.getBlue() + col2.getBlue() - orGridControler.getBlue())), .95);
-        return new Color(overFlow(col1.getRed() + col2.getRed() - org.getRed()), overFlow(col1.getGreen() + col2.getGreen() - org.getGreen()), overFlow(col1.getBlue() + col2.getBlue() - org.getBlue()));
-    }
 
     public static void createFadeEffect(int pos1, int pos2, int pos3, double grad, int from){
         if(pos1 != -1){
             Color grad1;
-            grad1 = getGradient(Color.RED, View.getNormCellColor(pos1), grad);
+            grad1 = GridControler.getGradient(Color.RED, View.getNormCellColor(pos1), grad);
             if (true) {
                 switch (from) {
                     case 1:
                         if (hasEffect[pos1] % 3 != 0 && hasEffect[pos1] % 5 != 0 && hasEffect[pos1] % 7 != 0) {
-                            View.effectColor[pos1] = (addColors(grad1,saveColor[pos1],View.getNormCellColor(pos1)));
+                            View.effectColor[pos1] = (GridControler.addColors(grad1,saveColor[pos1],View.getNormCellColor(pos1)));
                             View.updated[pos1] = true;
                         } else {
-                            saveColor[pos1] = addColors(grad1,saveColor[pos1],View.getNormCellColor(pos1));
+                            saveColor[pos1] = GridControler.addColors(grad1,saveColor[pos1],View.getNormCellColor(pos1));
                         }
                         break;
                     case 2:
                         if (hasEffect[pos1] % 5 != 0 && hasEffect[pos1] % 7 != 0) {
-                            View.effectColor[pos1] = (addColors(grad1,saveColor[pos1],View.getNormCellColor(pos1)));
+                            View.effectColor[pos1] = (GridControler.addColors(grad1,saveColor[pos1],View.getNormCellColor(pos1)));
                             View.updated[pos1] = true;
                         } else {
-                            saveColor[pos1] = addColors(grad1,saveColor[pos1],View.getNormCellColor(pos1));
+                            saveColor[pos1] = GridControler.addColors(grad1,saveColor[pos1],View.getNormCellColor(pos1));
                         }
                         break;
                     case 3:
                         if (hasEffect[pos1] % 7 != 0) {
-                            View.effectColor[pos1] = (addColors(grad1,saveColor[pos1],View.getNormCellColor(pos1)));
+                            View.effectColor[pos1] = (GridControler.addColors(grad1,saveColor[pos1],View.getNormCellColor(pos1)));
                             View.updated[pos1] = true;
                         } else {
-                            saveColor[pos1] = addColors(grad1,saveColor[pos1],View.getNormCellColor(pos1));
+                            saveColor[pos1] = GridControler.addColors(grad1,saveColor[pos1],View.getNormCellColor(pos1));
                         }
                         break;
                     case 4:
-                        View.effectColor[pos1] = (addColors(grad1,saveColor[pos1],View.getNormCellColor(pos1)));
+                        View.effectColor[pos1] = (GridControler.addColors(grad1,saveColor[pos1],View.getNormCellColor(pos1)));
                         View.updated[pos1] = true;
                         break;
                 }
@@ -120,35 +101,35 @@ public class PushAttack {
         }
         if(pos2 != -1){
             Color grad2;
-            grad2 = getGradient(Color.RED, View.getNormCellColor(pos2), grad);
+            grad2 = GridControler.getGradient(Color.RED, View.getNormCellColor(pos2), grad);
             if (true) {
                 switch (from){
                     case 1:
                         if (hasEffect[pos2] % 3 != 0 && hasEffect[pos2] % 5 != 0 && hasEffect[pos2] % 7 != 0) {
-                            View.effectColor[pos2] = (addColors(grad2,saveColor[pos2],View.getNormCellColor(pos2)));
+                            View.effectColor[pos2] = (GridControler.addColors(grad2,saveColor[pos2],View.getNormCellColor(pos2)));
                             View.updated[pos2] = true;
                         } else {
-                            saveColor[pos2] = addColors(grad2,saveColor[pos2],View.getNormCellColor(pos2));
+                            saveColor[pos2] = GridControler.addColors(grad2,saveColor[pos2],View.getNormCellColor(pos2));
                         }
                         break;
                     case 2:
                         if (hasEffect[pos2] % 5 != 0 && hasEffect[pos2] % 7 != 0) {
-                            View.effectColor[pos2] = (addColors(grad2,saveColor[pos2],View.getNormCellColor(pos2)));
+                            View.effectColor[pos2] = (GridControler.addColors(grad2,saveColor[pos2],View.getNormCellColor(pos2)));
                             View.updated[pos2] = true;
                         } else {
-                            saveColor[pos2] = addColors(grad2,saveColor[pos2],View.getNormCellColor(pos2));
+                            saveColor[pos2] = GridControler.addColors(grad2,saveColor[pos2],View.getNormCellColor(pos2));
                         }
                         break;
                     case 3:
                         if (hasEffect[pos2] % 7 != 0) {
-                            View.effectColor[pos2] = (addColors(grad2,saveColor[pos2],View.getNormCellColor(pos2)));
+                            View.effectColor[pos2] = (GridControler.addColors(grad2,saveColor[pos2],View.getNormCellColor(pos2)));
                             View.updated[pos2] = true;
                         } else {
-                            saveColor[pos2] = addColors(grad2,saveColor[pos2],View.getNormCellColor(pos2));
+                            saveColor[pos2] = GridControler.addColors(grad2,saveColor[pos2],View.getNormCellColor(pos2));
                         }
                         break;
                     case 4:
-                        View.effectColor[pos2] = (addColors(grad2,saveColor[pos2],View.getNormCellColor(pos2)));
+                        View.effectColor[pos2] = (GridControler.addColors(grad2,saveColor[pos2],View.getNormCellColor(pos2)));
                         View.updated[pos2] = true;
                         break;
                 }
@@ -156,35 +137,35 @@ public class PushAttack {
         }
         if(pos3 != -1){
             Color grad3;
-            grad3 = getGradient(Color.RED, View.getNormCellColor(pos3), grad);
+            grad3 = GridControler.getGradient(Color.RED, View.getNormCellColor(pos3), grad);
             if (true) {
                 switch (from){
                     case 1:
                         if (hasEffect[pos3] % 3 != 0 && hasEffect[pos3] % 5 != 0 && hasEffect[pos3] % 7 != 0) {
-                            View.effectColor[pos3] = (addColors(grad3,saveColor[pos3],View.getNormCellColor(pos3)));
+                            View.effectColor[pos3] = (GridControler.addColors(grad3,saveColor[pos3],View.getNormCellColor(pos3)));
                             View.updated[pos3] = true;
                         } else {
-                            saveColor[pos3] = addColors(grad3,saveColor[pos3],View.getNormCellColor(pos3));
+                            saveColor[pos3] = GridControler.addColors(grad3,saveColor[pos3],View.getNormCellColor(pos3));
                         }
                         break;
                     case 2:
                         if (hasEffect[pos3] % 5 != 0 && hasEffect[pos3] % 7 != 0) {
-                            View.effectColor[pos3] = (addColors(grad3,saveColor[pos3],View.getNormCellColor(pos3)));
+                            View.effectColor[pos3] = (GridControler.addColors(grad3,saveColor[pos3],View.getNormCellColor(pos3)));
                             View.updated[pos3] = true;
                         } else {
-                            saveColor[pos3] = addColors(grad3,saveColor[pos3],View.getNormCellColor(pos3));
+                            saveColor[pos3] = GridControler.addColors(grad3,saveColor[pos3],View.getNormCellColor(pos3));
                         }
                         break;
                     case 3:
                         if (hasEffect[pos3] % 7 != 0) {
-                            View.effectColor[pos3] = (addColors(grad3,saveColor[pos3],View.getNormCellColor(pos3)));
+                            View.effectColor[pos3] = (GridControler.addColors(grad3,saveColor[pos3],View.getNormCellColor(pos3)));
                             View.updated[pos3] = true;
                         } else {
-                            saveColor[pos3] = addColors(grad3,saveColor[pos3],View.getNormCellColor(pos3));
+                            saveColor[pos3] = GridControler.addColors(grad3,saveColor[pos3],View.getNormCellColor(pos3));
                         }
                         break;
                     case 4:
-                        View.effectColor[pos3] = (addColors(grad3,saveColor[pos3],View.getNormCellColor(pos3)));
+                        View.effectColor[pos3] = (GridControler.addColors(grad3,saveColor[pos3],View.getNormCellColor(pos3)));
                         View.updated[pos3] = true;
                         break;
                 }

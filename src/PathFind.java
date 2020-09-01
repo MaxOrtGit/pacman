@@ -72,7 +72,7 @@ public class PathFind {
                 if (toSearch != -2) {
                     if (toSearch != -1) {
                         if (paint == true && color > 0) {
-                            View.effectColor[toSearch] = (PushAttack.getGradient(new Color(color, color, 150), View.getNormCellColor(toSearch), .5));
+                            View.effectColor[toSearch] = (GridControler.getGradient(new Color(color, color, 150), View.getNormCellColor(toSearch), .5));
                             View.updated[toSearch] = true;
                             color -= 3;
                         }
@@ -120,7 +120,7 @@ public class PathFind {
                     found = toFind;
                     toFind = from.get(pathKeys[i]);
                     if (paint == true && scolor > 0) {
-                        View.effectColor[toFind] = (PushAttack.getGradient(new Color(150, scolor, 150), View.getNormCellColor(toFind), .5));
+                        View.effectColor[toFind] = (GridControler.getGradient(new Color(150, scolor, 150), View.getNormCellColor(toFind), .5));
                         View.updated[toFind] = true;
                         scolor -= 3;
                     }

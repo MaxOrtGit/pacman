@@ -77,7 +77,7 @@ public class Enemy<addToPath> {
             View.paintEnemy(oEnemyLocation, nEnemyLocation, color);
             if (paint && target != View.playerLocation) {
                 View.resetAll();
-                View.effectColor[target] = (PushAttack.getGradient(new Color(200, 0, 0), View.getNormCellColor(target), .25));
+                View.effectColor[target] = (GridControler.getGradient(new Color(200, 0, 0), View.getNormCellColor(target), .25));
                 View.updated[target] = true;
             }
             if (location == View.playerLocation) {

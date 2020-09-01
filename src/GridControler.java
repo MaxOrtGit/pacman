@@ -120,4 +120,27 @@ public class GridControler {
         }
     }
 
+    public static Color getGradient(Color col1, Color col2, double per){
+        //per of cal1
+        return new Color((int)(col1.getRed()*per + col2.getRed()*(1-per)), (int)(col1.getGreen()*per + col2.getGreen()*(1-per)), (int)(col1.getBlue()*per + col2.getBlue()*(1-per)));
+    }
+
+
+    public static Color addColors(Color col1, Color col2, Color org) {
+        //Color grad = getGradient(org, new Color(overFlow(col1.getRed() + col2.getRed() - orGridControler.getRed()), overFlow(col1.getGreen() + col2.getGreen() - orGridControler.getGreen()), overFlow(col1.getBlue() + col2.getBlue() - orGridControler.getBlue())), .95);
+        return new Color(overFlow(col1.getRed() + col2.getRed() - org.getRed()), overFlow(col1.getGreen() + col2.getGreen() - org.getGreen()), overFlow(col1.getBlue() + col2.getBlue() - org.getBlue()));
+    }
+
+
+    public static int overFlow(int num){
+        if (num > 255){
+            return 255;
+        } else {
+            if (num < 0) {
+                return 0;
+            } else {
+                return num;
+            }
+        }
+    }
 }

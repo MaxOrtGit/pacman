@@ -106,8 +106,15 @@ public class TimerRunner extends TimerTask {
 
         if (View.clickedG){
             View.canSeeAll = !View.canSeeAll;
-            System.out.println(View.canSeeAll);
+            if (View.canSeeAll){
+                View.resetAll();
+            }
             View.clickedG = false;
+        }
+
+        if (View.clickedH){
+            Arrays.fill(View.seenMemory, View.cantSeeColor);
+            View.clickedH = false;
         }
 
         if (View.clickedB){

@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -18,6 +19,8 @@ public class View extends JPanel implements KeyListener, MouseListener {
     public static int walls = sizeOfGrid * 2 + 4;
     public static Color[] normColor;
     public static Color[] effectColor;
+    public static Color wallColor = Color.darkGray;//new Color(101, 67, 33);
+    public static Color cantSeeColor = new Color(0, 0, 55);
     public static boolean[] isWall;
     public static boolean[] isEffectWall;
     public static boolean[] hasEffect;
@@ -27,6 +30,7 @@ public class View extends JPanel implements KeyListener, MouseListener {
     public static boolean fov = false;
     public static boolean canSeeAll = true;
     public static boolean[] canSee = new boolean[sizeOfGrid*sizeOfGrid];
+    public static Color[] seenMemory = new Color[sizeOfGrid*sizeOfGrid];
     public static boolean[] updated;
     public static boolean moveUp = false;
     public static boolean moveDown = false;
@@ -34,6 +38,7 @@ public class View extends JPanel implements KeyListener, MouseListener {
     public static boolean moveRight = false;
     public static boolean clickedV = false;
     public static boolean clickedG = false;
+    public static boolean clickedH = false;
     public static boolean clickedB = false;
     public static boolean clickedC = false;
     public static boolean clickedI = false;
@@ -56,7 +61,7 @@ public class View extends JPanel implements KeyListener, MouseListener {
         TScreen.setSize(new Dimension(sizeOfGrid * sizeofSquare, sizeOfGrid * sizeofSquare));
         TScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         TScreen.addKeyListener(this);
-
+        TScreen.setResizable(false);
         GridLayout layout = new GridLayout(sizeOfGrid, sizeOfGrid);
 
         TScreen.setLayout(layout);
@@ -68,6 +73,7 @@ public class View extends JPanel implements KeyListener, MouseListener {
         }
 
         TScreen.addMouseListener(this);
+
     }
 
     public static void createEnemy(){
@@ -124,7 +130,7 @@ public class View extends JPanel implements KeyListener, MouseListener {
             if ((!seeAll || updated[i]) && (seeAll || canSee[i])) {
                 gridCell[i].setBackground(effectColor[i]);
             } else if (!seeAll){
-                gridCell[i].setBackground(Color.black);
+                gridCell[i].setBackground(GridControler.getGradient(seenMemory[i], cantSeeColor, 0.4));
             }
         }
     }
@@ -157,8 +163,8 @@ public class View extends JPanel implements KeyListener, MouseListener {
     public static void makeWall(int nWallLocation) {
         if(notOcupied(nWallLocation)) {
             isWall[nWallLocation] = true;
-            normColor[nWallLocation] = Color.darkGray;
-            updateCell(nWallLocation,Color.darkGray);
+            normColor[nWallLocation] = wallColor;
+            updateCell(nWallLocation,wallColor);
         }
     }
 
@@ -291,6 +297,10 @@ public class View extends JPanel implements KeyListener, MouseListener {
             clickedG = true;
         }
 
+        if (k.getKeyCode() == KeyEvent.VK_H) {
+            clickedH = true;
+        }
+
         if (k.getKeyCode() == KeyEvent.VK_B) {
             clickedB = true;
         }
@@ -387,6 +397,8 @@ public class View extends JPanel implements KeyListener, MouseListener {
         Arrays.fill(AVal, 0);
         updated = new boolean[sizeOfGrid * sizeOfGrid];
         Arrays.fill(updated, false);
+        Arrays.fill(canSee, false);
+        Arrays.fill(seenMemory, cantSeeColor);
 
         Random rand = new Random();
 
